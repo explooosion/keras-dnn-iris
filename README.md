@@ -25,3 +25,15 @@ conda install keras pandas numpy sklearn scikit-learn
 ```python
 python dnn.py
 ```
+
+## Predict from exist model
+
+```python
+python dnn_load_model.py
+```
+
+## Predict from exist model only with weight
+
+```python
+python dnn_load_weight.py
+```
