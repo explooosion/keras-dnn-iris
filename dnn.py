@@ -29,8 +29,9 @@ Y = dataset[:, x_col]
 encoder = LabelEncoder()
 # 將 DV 放入轉換器
 encoder.fit(Y)
-# 將資料進行轉變，並存成 encoded_Y
+# 將資料標準化(normalized)，並存成 encoded_Y
 encoded_Y = encoder.transform(Y)
+# [0 1 0 2 2 0 2 1] 0~2:類別
 
 # 資料型態轉換工具組，將目標欄位轉換成二維矩陣
 # 由於 encoded_Y 是一個陣列 [0, 1, 1, 2, …]，模型必須將資料轉換成二維矩陣。
@@ -41,17 +42,21 @@ dummy_y = keras.utils.np_utils.to_categorical(encoded_Y)
 model = keras.models.Sequential()
 # imput_dim 輸入層(IV), units 神經單元個數(DV)
 model.add(keras.layers.Dense(input_dim=x_col, units=y_classify))
-# 激活函數
+# Activation = 激勵函數(解決非線性問題)
 model.add(keras.layers.Activation('softmax'))
-# loss 損失函數, opt 隨機梯度下降優化器,
-# lr 學習率, metrics 以 acc 作為評估指標
+# loss 損失函數(估量預測結果差異程度)
+# opt 優化器，用於最佳解問題, prediction = wx + b
+# SGD = 隨機梯度下降優化器(stochastic gradient decent)
+# lr 學習率(Learning Rate)
+# metrics 以 acc 作為評估指標
+# https://keras-cn.readthedocs.io/en/latest/other/optimizers/
 model.compile(loss='categorical_crossentropy',
               optimizer=keras.optimizers.SGD(lr=0.1), metrics=['accuracy'])
 
 # 檢視模型架構
 model.summary()
 
-# 訓練模型 epochs 迭代, batch_size 批量訓練
+# 訓練模型 epochs 迭代次數, batch_size 每次迭代(Iteration)的筆數
 model.fit(X, dummy_y, epochs=200, batch_size=10)
 
 # 測試模型
